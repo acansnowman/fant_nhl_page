@@ -201,7 +201,7 @@
     <div class="format-chips">
       <span class="chip">Skaters &mdash; <strong>G + A = Pts</strong></span>
       <span class="chip">Goalie &mdash; <strong>(GF &minus; GA) + shutout bonus</strong></span>
-      <span class="chip">Roster &mdash; <strong>15 F &middot; 4 D &middot; 1 G</strong></span>
+      <span class="chip">Roster &mdash; <strong>8 F &middot; 3 D &middot; 1 G</strong></span>
     </div>
   </header>
 
@@ -217,8 +217,8 @@
   <section class="summary-bar">
     <div class="summary-stat">
       <span class="summary-label">Roster Filled</span>
-      <span class="summary-value num"><span id="sumFilled">1</span><span class="of">/20</span></span>
-      <span class="summary-open" id="sumOpen">14 F &middot; 4 D &middot; 1 G open</span>
+      <span class="summary-value num"><span id="sumFilled">1</span><span class="of">/12</span></span>
+      <span class="summary-open" id="sumOpen">7 F &middot; 3 D &middot; 1 G open</span>
     </div>
     <div class="summary-stat">
       <span class="summary-label">Last Season Goals</span>
@@ -240,12 +240,12 @@
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Forwards</h2><span class="fill-count num" id="fCount">1 / 15 filled</span></div>
+    <div class="section-head"><h2>Forwards</h2><span class="fill-count num" id="fCount">1 / 8 filled</span></div>
     <div class="slot-grid forwards" id="forwardsGrid"></div>
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Defense</h2><span class="fill-count num" id="dCount">0 / 4 filled</span></div>
+    <div class="section-head"><h2>Defense</h2><span class="fill-count num" id="dCount">0 / 3 filled</span></div>
     <div class="slot-grid defense" id="defenseGrid"></div>
   </section>
 
@@ -262,12 +262,12 @@
 
 <script>
   const TEAMS = [
-    { id: 'you',    name: 'Drew',   roster: { F: Array(15).fill(null), D: Array(4).fill(null), G: [null] } },
-    { id: 'mike',   name: 'Mike',   roster: { F: Array(15).fill(null), D: Array(4).fill(null), G: [null] } },
-    { id: 'matt',   name: 'Matt',   roster: { F: Array(15).fill(null), D: Array(4).fill(null), G: [null] } },
-    { id: 'travis', name: 'Travis', roster: { F: Array(15).fill(null), D: Array(4).fill(null), G: [null] } },
-    { id: 'james',  name: 'James',  roster: { F: Array(15).fill(null), D: Array(4).fill(null), G: [null] } },
-    { id: 'mac',    name: 'Mac',    roster: { F: Array(15).fill(null), D: Array(4).fill(null), G: [null] } }
+    { id: 'you',    name: 'Drew',   roster: { F: Array(8).fill(null), D: Array(3).fill(null), G: [null] } },
+    { id: 'mike',   name: 'Mike',   roster: { F: Array(8).fill(null), D: Array(3).fill(null), G: [null] } },
+    { id: 'matt',   name: 'Matt',   roster: { F: Array(8).fill(null), D: Array(3).fill(null), G: [null] } },
+    { id: 'travis', name: 'Travis', roster: { F: Array(8).fill(null), D: Array(3).fill(null), G: [null] } },
+    { id: 'james',  name: 'James',  roster: { F: Array(8).fill(null), D: Array(3).fill(null), G: [null] } },
+    { id: 'mac',    name: 'Mac',    roster: { F: Array(8).fill(null), D: Array(3).fill(null), G: [null] } }
   ];
 
   function byId(id) { return TEAMS.find(function (t) { return t.id === id; }); }
@@ -367,7 +367,7 @@
     wrap.innerHTML = TEAMS.map(function (t) {
       const active = t.id === activeTeam;
       return '<button class="team-tab' + (active ? ' active' : '') + '" data-team="' + t.id + '" aria-pressed="' + active + '">' +
-        t.name + ' <span class="fill-badge num">' + fillCount(t) + '/20</span></button>';
+        t.name + ' <span class="fill-badge num">' + fillCount(t) + '/12</span></button>';
     }).join('');
     wrap.querySelectorAll('.team-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -382,8 +382,8 @@
     const goals = skaters.reduce(function (s, p) { return s + p.recent.g; }, 0);
     const assists = skaters.reduce(function (s, p) { return s + p.recent.a; }, 0);
     const pts = skaters.reduce(function (s, p) { return s + p.recent.pts; }, 0);
-    const openF = 15 - team.roster.F.filter(Boolean).length;
-    const openD = 4 - team.roster.D.filter(Boolean).length;
+    const openF = 8 - team.roster.F.filter(Boolean).length;
+    const openD = 3 - team.roster.D.filter(Boolean).length;
     const openG = 1 - team.roster.G.filter(Boolean).length;
 
     document.getElementById('sumFilled').textContent = fillCount(team);
@@ -404,8 +404,8 @@
     document.getElementById('defenseGrid').innerHTML = team.roster.D.map(function (p, i) { return slotCardHTML('D' + (i + 1), p); }).join('');
     document.getElementById('goalieWrap').innerHTML = goalieCardHTML(team.roster.G[0]);
 
-    document.getElementById('fCount').textContent = team.roster.F.filter(Boolean).length + ' / 15 filled';
-    document.getElementById('dCount').textContent = team.roster.D.filter(Boolean).length + ' / 4 filled';
+    document.getElementById('fCount').textContent = team.roster.F.filter(Boolean).length + ' / 8 filled';
+    document.getElementById('dCount').textContent = team.roster.D.filter(Boolean).length + ' / 3 filled';
     document.getElementById('gCount').textContent = team.roster.G.filter(Boolean).length + ' / 1 filled';
   }
 

@@ -196,7 +196,7 @@
         <div class="eyebrow">2026&ndash;27 Season &middot; 6-Team Fantasy Draft</div>
         <h1>Lineup Card</h1>
       </div>
-      <div class="updated" id="lastUpdated">Updated after pick 15 &middot; draft running in WhatsApp</div>
+      <div class="updated" id="lastUpdated">Updated after pick 18 &middot; draft running in WhatsApp</div>
     </div>
     <div class="format-chips">
       <span class="chip">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
@@ -328,6 +328,11 @@
     recent: { season: "'25-26", g: 29, a: 71 },
     prior: { season: "'24-25", g: 43, a: 63 }
   };
+  byId('mike').roster.F[2] = {
+    name: 'Kyle Connor', teamAbbrev: 'WPG', pos: 'LW', age: 29,
+    recent: { season: "'25-26", g: 39, a: 53 },
+    prior: { season: "'24-25", g: 41, a: 56 }
+  };
   byId('james').roster.F[0] = {
     name: 'Leon Draisaitl', teamAbbrev: 'EDM', pos: 'C', age: 30,
     recent: { season: "'25-26", g: 35, a: 62 },
@@ -338,6 +343,11 @@
     recent: { season: "'25-26", g: 22, a: 55 },
     prior: { season: "'24-25", g: 32, a: 56 }
   };
+  byId('james').roster.F[2] = {
+    name: 'Mark Scheifele', teamAbbrev: 'WPG', pos: 'C', age: 33,
+    recent: { season: "'25-26", g: 36, a: 67 },
+    prior: { season: "'24-25", g: 39, a: 48 }
+  };
   byId('you').roster.F[0] = {
     name: 'Nikita Kucherov', teamAbbrev: 'TBL', pos: 'RW', age: 33,
     recent: { season: "'25-26", g: 44, a: 86 },
@@ -347,6 +357,11 @@
     name: 'Cole Caufield', teamAbbrev: 'MTL', pos: 'RW', age: 25,
     recent: { season: "'25-26", g: 51, a: 37 },
     prior: { season: "'24-25", g: 37, a: 33 }
+  };
+  byId('you').roster.D[0] = {
+    name: 'Evan Bouchard', teamAbbrev: 'EDM', pos: 'D', age: 26,
+    recent: { season: "'25-26", g: 21, a: 74 },
+    prior: { season: "'24-25", g: 14, a: 53 }
   };
 
   const DRAFT_LOG = [
@@ -364,7 +379,10 @@
     { pick: 12, teamId: 'you', name: 'Cole Caufield', pos: 'F' },
     { pick: 13, teamId: 'travis', name: 'William Nylander', pos: 'F' },
     { pick: 14, teamId: 'matt', name: 'Jason Robertson', pos: 'F' },
-    { pick: 15, teamId: 'mac', name: 'Martin Necas', pos: 'F' }
+    { pick: 15, teamId: 'mac', name: 'Martin Necas', pos: 'F' },
+    { pick: 16, teamId: 'mike', name: 'Kyle Connor', pos: 'F' },
+    { pick: 17, teamId: 'james', name: 'Mark Scheifele', pos: 'F' },
+    { pick: 18, teamId: 'you', name: 'Evan Bouchard', pos: 'D' }
   ];
 
   let activeTeam = 'you';

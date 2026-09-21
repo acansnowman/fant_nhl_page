@@ -197,7 +197,7 @@
         <div class="eyebrow">2026&ndash;27 Season &middot; 6-Team Fantasy Draft</div>
         <h1>Lineup Card</h1>
       </div>
-      <div class="updated" id="lastUpdated">Updated after pick 23 &middot; draft running in WhatsApp</div>
+      <div class="updated" id="lastUpdated">Updated after pick 24 &middot; draft running in WhatsApp</div>
     </div>
     <div class="format-chips">
       <span class="chip">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
@@ -389,6 +389,11 @@
     recent: { season: "'25-26", g: 21, a: 74 },
     prior: { season: "'24-25", g: 14, a: 53 }
   };
+  byId('you').roster.D[1] = {
+    name: 'Rasmus Dahlin', teamAbbrev: 'BUF', pos: 'D', age: 25,
+    recent: { season: "'25-26", g: 19, a: 55 },
+    prior: { season: "'24-25", g: 17, a: 51 }
+  };
 
   const DRAFT_LOG = [
     { pick: 1, teamId: 'travis', name: 'Connor McDavid', pos: 'F' },
@@ -413,7 +418,8 @@
     { pick: 20, teamId: 'matt', name: 'Lane Hutson', pos: 'D' },
     { pick: 21, teamId: 'mac', name: 'Zach Werenski', pos: 'D' },
     { pick: 22, teamId: 'mike', name: 'Adam Fox', pos: 'D' },
-    { pick: 23, teamId: 'james', name: 'Wyatt Johnston', pos: 'F' }
+    { pick: 23, teamId: 'james', name: 'Wyatt Johnston', pos: 'F' },
+    { pick: 24, teamId: 'you', name: 'Rasmus Dahlin', pos: 'D' }
   ];
 
   let activeTeam = 'you';

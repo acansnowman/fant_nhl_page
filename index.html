@@ -197,7 +197,7 @@
         <div class="eyebrow">2026&ndash;27 Season &middot; 6-Team Fantasy Draft</div>
         <h1>Lineup Card</h1>
       </div>
-      <div class="updated" id="lastUpdated">Updated after pick 39 &middot; draft running in WhatsApp</div>
+      <div class="updated" id="lastUpdated">Updated after pick 41 &middot; draft running in WhatsApp</div>
     </div>
     <div class="format-chips">
       <span class="chip">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
@@ -409,6 +409,11 @@
     recent: { season: "'25-26", g: 18, a: 22 },
     prior: { season: "'24-25", g: 35, a: 25 }
   };
+  byId('mike').roster.D[2] = {
+    name: 'Dougie Hamilton', teamAbbrev: 'NJD', pos: 'D', age: 33,
+    recent: { season: "'25-26", g: 12, a: 27 },
+    prior: { season: "'24-25", g: 9, a: 31 }
+  };
   byId('james').roster.F[0] = {
     name: 'Leon Draisaitl', teamAbbrev: 'EDM', pos: 'C', age: 30,
     recent: { season: "'25-26", g: 35, a: 62 },
@@ -438,6 +443,11 @@
     name: 'Brandon Hagel', teamAbbrev: 'TBL', pos: 'LW', age: 27,
     recent: { season: "'25-26", g: 36, a: 38 },
     prior: { season: "'24-25", g: 35, a: 55 }
+  };
+  byId('james').roster.F[6] = {
+    name: 'Juraj Slafkovsky', teamAbbrev: 'MTL', pos: 'LW', age: 22,
+    recent: { season: "'25-26", g: 30, a: 43 },
+    prior: { season: "'24-25", g: 18, a: 33 }
   };
   byId('you').roster.F[0] = {
     name: 'Nikita Kucherov', teamAbbrev: 'TBL', pos: 'RW', age: 33,
@@ -509,7 +519,9 @@
     { pick: 36, teamId: 'you', name: 'Sebastian Aho', pos: 'F' },
     { pick: 37, teamId: 'travis', name: 'Sidney Crosby', pos: 'F' },
     { pick: 38, teamId: 'matt', name: 'Jack Hughes', pos: 'F' },
-    { pick: 39, teamId: 'mac', name: 'Jakob Chychrun', pos: 'D' }
+    { pick: 39, teamId: 'mac', name: 'Jakob Chychrun', pos: 'D' },
+    { pick: 40, teamId: 'mike', name: 'Dougie Hamilton', pos: 'D' },
+    { pick: 41, teamId: 'james', name: 'Juraj Slafkovsky', pos: 'F' }
   ];
 
   let activeTeam = 'you';

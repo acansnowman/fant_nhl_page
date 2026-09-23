@@ -197,7 +197,7 @@
         <div class="eyebrow">2026&ndash;27 Season &middot; 6-Team Fantasy Draft</div>
         <h1>Lineup Card</h1>
       </div>
-      <div class="updated" id="lastUpdated">Updated after pick 42 &middot; draft running in WhatsApp</div>
+      <div class="updated" id="lastUpdated">Updated after pick 44 &middot; draft running in WhatsApp</div>
     </div>
     <div class="format-chips">
       <span class="chip">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
@@ -309,6 +309,11 @@
     recent: { season: "'25-26", g: 29, a: 45 },
     prior: { season: "'24-25", g: 33, a: 58 }
   };
+  byId('travis').roster.F[5] = {
+    name: 'Brayden Point', teamAbbrev: 'TBL', pos: 'C', age: 30,
+    recent: { season: "'25-26", g: 18, a: 32 },
+    prior: { season: "'24-25", g: 42, a: 40 }
+  };
   byId('matt').roster.F[0] = {
     name: 'Macklin Celebrini', teamAbbrev: 'SJS', pos: 'C', age: 20,
     recent: { season: "'25-26", g: 45, a: 70 },
@@ -333,6 +338,11 @@
     name: 'Jack Hughes', teamAbbrev: 'NJD', pos: 'C', age: 25,
     recent: { season: "'25-26", g: 27, a: 50 },
     prior: { season: "'24-25", g: 27, a: 43 }
+  };
+  byId('matt').roster.F[5] = {
+    name: 'Adrian Kempe', teamAbbrev: 'LAK', pos: 'RW', age: 30,
+    recent: { season: "'25-26", g: 36, a: 37 },
+    prior: { season: "'24-25", g: 35, a: 38 }
   };
   byId('matt').roster.D[0] = {
     name: 'Cale Makar', teamAbbrev: 'COL', pos: 'D', age: 27,
@@ -527,7 +537,9 @@
     { pick: 39, teamId: 'mac', name: 'Jakob Chychrun', pos: 'D' },
     { pick: 40, teamId: 'mike', name: 'Dougie Hamilton', pos: 'D' },
     { pick: 41, teamId: 'james', name: 'Juraj Slafkovsky', pos: 'F' },
-    { pick: 42, teamId: 'you', name: 'Nikolaj Ehlers', pos: 'F' }
+    { pick: 42, teamId: 'you', name: 'Nikolaj Ehlers', pos: 'F' },
+    { pick: 43, teamId: 'travis', name: 'Brayden Point', pos: 'F' },
+    { pick: 44, teamId: 'matt', name: 'Adrian Kempe', pos: 'F' }
   ];
 
   let activeTeam = 'you';

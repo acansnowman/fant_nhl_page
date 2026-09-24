@@ -197,7 +197,7 @@
         <div class="eyebrow">2026&ndash;27 Season &middot; 6-Team Fantasy Draft</div>
         <h1>Lineup Card</h1>
       </div>
-      <div class="updated" id="lastUpdated">Updated after pick 47 &middot; draft running in WhatsApp</div>
+      <div class="updated" id="lastUpdated">Updated after pick 48 &middot; draft running in WhatsApp</div>
     </div>
     <div class="format-chips">
       <span class="chip">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
@@ -433,6 +433,10 @@
     name: 'Boston Bruins', teamAbbrev: 'BOS',
     recent: { season: "'25-26", ga: 250, so: 3 }
   };
+  byId('you').roster.T[0] = {
+    name: 'Colorado Avalanche', teamAbbrev: 'COL',
+    recent: { season: "'25-26", ga: 203, so: 8 }
+  };
   byId('james').roster.F[0] = {
     name: 'Leon Draisaitl', teamAbbrev: 'EDM', pos: 'C', age: 30,
     recent: { season: "'25-26", g: 35, a: 62 },
@@ -556,7 +560,8 @@
     { pick: 44, teamId: 'matt', name: 'Adrian Kempe', pos: 'F' },
     { pick: 45, teamId: 'mac', name: 'Alex DeBrincat', pos: 'F' },
     { pick: 46, teamId: 'mike', name: 'Boston Bruins', pos: 'T' },
-    { pick: 47, teamId: 'james', name: 'Darren Raddysh', pos: 'D' }
+    { pick: 47, teamId: 'james', name: 'Darren Raddysh', pos: 'D' },
+    { pick: 48, teamId: 'you', name: 'Colorado Avalanche', pos: 'T' }
   ];
 
   let activeTeam = 'you';

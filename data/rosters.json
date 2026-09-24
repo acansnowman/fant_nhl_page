@@ -397,7 +397,23 @@
        "a": 38
       }
      },
-     null,
+     {
+      "playerId": 8477933,
+      "name": "Sam Reinhart",
+      "teamAbbrev": "FLA",
+      "pos": "C",
+      "age": 30,
+      "recent": {
+       "season": "'25-26",
+       "g": 29,
+       "a": 32
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 39,
+       "a": 42
+      }
+     },
      null
     ],
     "D": [
@@ -905,7 +921,15 @@
      null
     ],
     "T": [
-     null
+     {
+      "name": "Tampa Bay Lightning",
+      "teamAbbrev": "TBL",
+      "recent": {
+       "season": "'25-26",
+       "ga": 231,
+       "so": 2
+      }
+     }
     ]
    },
    "replaced": []
@@ -1204,6 +1228,18 @@
    "pick": 49,
    "teamId": "travis",
    "name": "Dallas Stars",
+   "pos": "T"
+  },
+  {
+   "pick": 50,
+   "teamId": "matt",
+   "name": "Sam Reinhart",
+   "pos": "F"
+  },
+  {
+   "pick": 51,
+   "teamId": "mac",
+   "name": "Tampa Bay Lightning",
    "pos": "T"
   }
  ]

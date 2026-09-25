@@ -90,7 +90,23 @@
        "a": 39
       }
      },
-     null,
+     {
+      "playerId": 8482116,
+      "name": "Tim Stützle",
+      "teamAbbrev": "OTT",
+      "pos": "C",
+      "age": 24,
+      "recent": {
+       "season": "'25-26",
+       "g": 34,
+       "a": 49
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 24,
+       "a": 55
+      }
+     },
      null,
      null
     ],
@@ -760,7 +776,23 @@
        "a": 33
       }
      },
-     null
+     {
+      "playerId": 8484166,
+      "name": "Adam Fantilli",
+      "teamAbbrev": "CBJ",
+      "pos": "C",
+      "age": 21,
+      "recent": {
+       "season": "'25-26",
+       "g": 24,
+       "a": 35
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 31,
+       "a": 23
+      }
+     }
     ],
     "D": [
      {
@@ -1262,6 +1294,18 @@
    "pick": 52,
    "teamId": "mike",
    "name": "Dylan Guenther",
+   "pos": "F"
+  },
+  {
+   "pick": 53,
+   "teamId": "james",
+   "name": "Adam Fantilli",
+   "pos": "F"
+  },
+  {
+   "pick": 54,
+   "teamId": "you",
+   "name": "Tim Stützle",
    "pos": "F"
   }
  ]

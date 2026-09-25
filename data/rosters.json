@@ -636,7 +636,23 @@
        "a": 0
       }
      },
-     null
+     {
+      "playerId": 8474590,
+      "name": "John Carlson",
+      "teamAbbrev": "TBL",
+      "pos": "D",
+      "age": 36,
+      "recent": {
+       "season": "'25-26",
+       "g": 14,
+       "a": 46
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 5,
+       "a": 46
+      }
+     }
     ],
     "T": [
      {
@@ -1307,6 +1323,12 @@
    "teamId": "you",
    "name": "Tim Stützle",
    "pos": "F"
+  },
+  {
+   "pick": 55,
+   "teamId": "travis",
+   "name": "John Carlson",
+   "pos": "D"
   }
  ]
 }

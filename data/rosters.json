@@ -860,7 +860,23 @@
        "a": 31
       }
      },
-     null,
+     {
+      "playerId": 8481605,
+      "name": "Jackson LaCombe",
+      "teamAbbrev": "ANA",
+      "pos": "D",
+      "age": 25,
+      "recent": {
+       "season": "'25-26",
+       "g": 10,
+       "a": 48
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 14,
+       "a": 29
+      }
+     },
      null
     ],
     "T": [
@@ -1395,6 +1411,12 @@
    "teamId": "mike",
    "name": "Nick Schmaltz",
    "pos": "F"
+  },
+  {
+   "pick": 59,
+   "teamId": "james",
+   "name": "Jackson LaCombe",
+   "pos": "D"
   }
  ]
 }

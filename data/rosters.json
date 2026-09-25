@@ -107,7 +107,23 @@
        "a": 55
       }
      },
-     null,
+     {
+      "playerId": 8476887,
+      "name": "Filip Forsberg",
+      "teamAbbrev": "NSH",
+      "pos": "LW",
+      "age": 32,
+      "recent": {
+       "season": "'25-26",
+       "g": 40,
+       "a": 35
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 31,
+       "a": 45
+      }
+     },
      null
     ],
     "D": [
@@ -1417,6 +1433,12 @@
    "teamId": "james",
    "name": "Jackson LaCombe",
    "pos": "D"
+  },
+  {
+   "pick": 60,
+   "teamId": "you",
+   "name": "Filip Forsberg",
+   "pos": "F"
   }
  ]
 }

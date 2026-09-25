@@ -251,7 +251,23 @@
        "a": 33
       }
      },
-     null,
+     {
+      "playerId": 8477951,
+      "name": "Nick Schmaltz",
+      "teamAbbrev": "UTA",
+      "pos": "C",
+      "age": 30,
+      "recent": {
+       "season": "'25-26",
+       "g": 33,
+       "a": 41
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 20,
+       "a": 43
+      }
+     },
      null,
      null
     ],
@@ -1372,6 +1388,12 @@
    "pick": 57,
    "teamId": "mac",
    "name": "Artemi Panarin",
+   "pos": "F"
+  },
+  {
+   "pick": 58,
+   "teamId": "mike",
+   "name": "Nick Schmaltz",
    "pos": "F"
   }
  ]

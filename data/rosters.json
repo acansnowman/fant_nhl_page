@@ -960,7 +960,23 @@
        "a": 31
       }
      },
-     null,
+     {
+      "playerId": 8478550,
+      "name": "Artemi Panarin",
+      "teamAbbrev": "LAK",
+      "pos": "LW",
+      "age": 34,
+      "recent": {
+       "season": "'25-26",
+       "g": 28,
+       "a": 56
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 37,
+       "a": 52
+      }
+     },
      null
     ],
     "D": [
@@ -1350,6 +1366,12 @@
    "pick": 56,
    "teamId": "matt",
    "name": "Clayton Keller",
+   "pos": "F"
+  },
+  {
+   "pick": 57,
+   "teamId": "mac",
+   "name": "Artemi Panarin",
    "pos": "F"
   }
  ]

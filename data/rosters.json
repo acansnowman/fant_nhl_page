@@ -646,7 +646,23 @@
        "a": 40
       }
      },
-     null,
+     {
+      "playerId": 8486103,
+      "name": "Ivar Stenberg",
+      "teamAbbrev": "SJS",
+      "pos": "LW",
+      "age": 18,
+      "recent": {
+       "season": "No NHL games yet",
+       "g": 0,
+       "a": 0
+      },
+      "prior": {
+       "season": "Drafted #2 overall, 2026",
+       "g": 0,
+       "a": 0
+      }
+     },
      null
     ],
     "D": [
@@ -1438,6 +1454,12 @@
    "pick": 60,
    "teamId": "you",
    "name": "Filip Forsberg",
+   "pos": "F"
+  },
+  {
+   "pick": 61,
+   "teamId": "travis",
+   "name": "Ivar Stenberg",
    "pos": "F"
   }
  ]

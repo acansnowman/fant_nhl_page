@@ -446,7 +446,23 @@
        "a": 42
       }
      },
-     null
+     {
+      "playerId": 8479343,
+      "name": "Clayton Keller",
+      "teamAbbrev": "UTA",
+      "pos": "RW",
+      "age": 28,
+      "recent": {
+       "season": "'25-26",
+       "g": 26,
+       "a": 62
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 30,
+       "a": 60
+      }
+     }
     ],
     "D": [
      {
@@ -1329,6 +1345,12 @@
    "teamId": "travis",
    "name": "John Carlson",
    "pos": "D"
+  },
+  {
+   "pick": 56,
+   "teamId": "matt",
+   "name": "Clayton Keller",
+   "pos": "F"
   }
  ]
 }

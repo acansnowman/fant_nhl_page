@@ -218,7 +218,23 @@
        "a": 25
       }
      },
-     null,
+     {
+      "playerId": 8482699,
+      "name": "Dylan Guenther",
+      "teamAbbrev": "UTA",
+      "pos": "RW",
+      "age": 23,
+      "recent": {
+       "season": "'25-26",
+       "g": 40,
+       "a": 33
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 27,
+       "a": 33
+      }
+     },
      null,
      null,
      null
@@ -1241,6 +1257,12 @@
    "teamId": "mac",
    "name": "Tampa Bay Lightning",
    "pos": "T"
+  },
+  {
+   "pick": 52,
+   "teamId": "mike",
+   "name": "Dylan Guenther",
+   "pos": "F"
   }
  ]
 }

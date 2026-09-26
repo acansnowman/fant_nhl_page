@@ -531,7 +531,23 @@
        "a": 60
       }
      },
-     null
+     {
+      "playerId": 8480036,
+      "name": "Miro Heiskanen",
+      "teamAbbrev": "DAL",
+      "pos": "D",
+      "age": 27,
+      "recent": {
+       "season": "'25-26",
+       "g": 9,
+       "a": 54
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 5,
+       "a": 20
+      }
+     }
     ],
     "T": [
      null
@@ -1078,7 +1094,23 @@
        "a": 27
       }
      },
-     null
+     {
+      "playerId": 8474578,
+      "name": "Erik Karlsson",
+      "teamAbbrev": "PIT",
+      "pos": "D",
+      "age": 36,
+      "recent": {
+       "season": "'25-26",
+       "g": 15,
+       "a": 51
+      },
+      "prior": {
+       "season": "'24-25",
+       "g": 11,
+       "a": 42
+      }
+     }
     ],
     "T": [
      {
@@ -1461,6 +1493,18 @@
    "teamId": "travis",
    "name": "Ivar Stenberg",
    "pos": "F"
+  },
+  {
+   "pick": 62,
+   "teamId": "matt",
+   "name": "Miro Heiskanen",
+   "pos": "D"
+  },
+  {
+   "pick": 63,
+   "teamId": "mac",
+   "name": "Erik Karlsson",
+   "pos": "D"
   }
  ]
 }

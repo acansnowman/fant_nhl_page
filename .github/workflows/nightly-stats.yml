@@ -29,12 +29,12 @@ jobs:
 
       - name: Commit playerdata.json / teamdata.json if either changed
         run: |
-          if git diff --quiet -- data/2026-2027/playerdata.json data/2026-2027/teamdata.json; then
+          git add data/2026-2027/playerdata.json data/2026-2027/teamdata.json
+          if git diff --cached --quiet; then
             echo "No new games; nothing to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/2026-2027/playerdata.json data/2026-2027/teamdata.json
           git commit -m "Nightly stats update ($(date -u +%Y-%m-%d))"
           git push

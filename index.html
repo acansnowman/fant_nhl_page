@@ -144,8 +144,9 @@
 
   /* ---------- Roster sections ---------- */
   .roster-section { display: flex; flex-direction: column; gap: 0.8rem; }
-  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
   .section-head h2 { font-family: "Teko", sans-serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; margin: 0; }
+  .section-head-right { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
   .fill-count { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--ink-muted); }
 
   .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.7rem; }
@@ -163,6 +164,22 @@
   .player-stats div { display: flex; flex-direction: column; gap: 0.05rem; }
   .player-stats dt { font-size: 0.65rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; }
   .player-stats dd { margin: 0; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 0.95rem; }
+
+  /* ---------- Player breakout (my roster only) ---------- */
+  .breakout-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+  .trend-badge { font-size: 0.72rem; font-family: "IBM Plex Mono", monospace; padding: 0.08rem 0.4rem; border-radius: 999px; white-space: nowrap; }
+  .trend-badge.up { background: var(--good-soft); color: var(--good); }
+  .trend-badge.down { background: var(--bad-soft); color: var(--bad); }
+  .player-bars { display: flex; flex-direction: column; gap: 0.35rem; }
+  .bar-row { display: flex; align-items: center; gap: 0.5rem; }
+  .bar-season { font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: var(--ink-faint); width: 2.7rem; flex-shrink: 0; }
+  .bar-track { flex-grow: 1; height: 8px; background: var(--surface-muted); border-radius: 999px; overflow: hidden; display: flex; }
+  .bar-g { background: var(--accent); height: 100%; }
+  .bar-a { background: var(--ink-faint); height: 100%; }
+  .bar-read { font-size: 0.68rem; color: var(--ink-muted); white-space: nowrap; }
+  .bar-legend { display: inline-flex; gap: 0.9rem; font-size: 0.72rem; color: var(--ink-muted); }
+  .legend-item { display: inline-flex; align-items: center; gap: 0.3rem; }
+  .swatch { display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 2px; }
 
   /* ---------- Team pick (goals-against slot) ---------- */
   .goal-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 9px; padding: 1.1rem 1.3rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
@@ -243,12 +260,12 @@
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Forwards</h2><span class="fill-count num" id="fCount">1 / 8 filled</span></div>
+    <div class="section-head"><h2>Forwards</h2><span class="section-head-right"><span class="fill-count num" id="fCount">1 / 8 filled</span><span class="bar-legend" id="fLegend"></span></span></div>
     <div class="slot-grid forwards" id="forwardsGrid"></div>
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Defense</h2><span class="fill-count num" id="dCount">0 / 3 filled</span></div>
+    <div class="section-head"><h2>Defense</h2><span class="section-head-right"><span class="fill-count num" id="dCount">0 / 3 filled</span><span class="bar-legend" id="dLegend"></span></span></div>
     <div class="slot-grid defense" id="defenseGrid"></div>
   </section>
 
@@ -269,7 +286,8 @@
 
   function byId(id) { return TEAMS.find(function (t) { return t.id === id; }); }
   function fp(g, a) { return 2 * g + a; }
-  let activeTeam = 'you';
+  const MY_TEAM_ID = 'you';
+  let activeTeam = MY_TEAM_ID;
 
   function fillCount(team) {
     return [...team.roster.F, ...team.roster.D, ...team.roster.T].filter(Boolean).length;
@@ -291,6 +309,57 @@
           '<div><dt>' + player.prior.season + '</dt><dd class="num">' + fp(player.prior.g, player.prior.a) + ' pts</dd></div>' +
         '</dl>' +
       '</article>';
+  }
+
+  // ---------- Player breakout (my roster only; other managers keep slotCardHTML) ----------
+
+  function groupMaxFp(players) {
+    const filled = players.filter(Boolean).map(function (p) { return fp(p.recent.g, p.recent.a); });
+    return filled.length ? Math.max.apply(null, filled) : 1;
+  }
+
+  function barRowHTML(seasonLabel, g, a, groupMax) {
+    const gPct = (g * 2 / groupMax * 100).toFixed(1);
+    const aPct = (a / groupMax * 100).toFixed(1);
+    return '' +
+      '<div class="bar-row">' +
+        '<span class="bar-season">' + seasonLabel + '</span>' +
+        '<div class="bar-track"><div class="bar-g" style="width:' + gPct + '%"></div><div class="bar-a" style="width:' + aPct + '%"></div></div>' +
+        '<span class="bar-read num">' + g + 'G ' + a + 'A &middot; ' + fp(g, a) + '</span>' +
+      '</div>';
+  }
+
+  function trendBadgeHTML(recentFp, priorFp) {
+    const delta = recentFp - priorFp;
+    const up = delta >= 0;
+    return '<span class="trend-badge ' + (up ? 'up' : 'down') + '">' + (up ? '&#9650;' : '&#9660;') + ' ' + (up ? '+' : '') + delta + '</span>';
+  }
+
+  function breakoutSlotCardHTML(label, player, groupMax) {
+    if (!player) {
+      return '<article class="slot-card open"><span class="slot-label">' + label + '</span><span class="open-tag">Open</span></article>';
+    }
+    return '' +
+      '<article class="slot-card">' +
+        '<div class="breakout-top">' +
+          '<span class="slot-label">' + label + '</span>' +
+          trendBadgeHTML(fp(player.recent.g, player.recent.a), fp(player.prior.g, player.prior.a)) +
+        '</div>' +
+        '<div>' +
+          '<div class="player-name">' + player.name + '</div>' +
+          '<div class="player-meta">' + player.teamAbbrev + ' &middot; ' + player.pos + ' &middot; Age ' + player.age + '</div>' +
+        '</div>' +
+        '<div class="player-bars">' +
+          barRowHTML(player.recent.season, player.recent.g, player.recent.a, groupMax) +
+          barRowHTML(player.prior.season, player.prior.g, player.prior.a, groupMax) +
+        '</div>' +
+      '</article>';
+  }
+
+  function barLegendHTML() {
+    return '' +
+      '<span class="legend-item"><span class="swatch" style="background:var(--accent)"></span>Goals (2pt)</span>' +
+      '<span class="legend-item"><span class="swatch" style="background:var(--ink-faint)"></span>Assists (1pt)</span>';
   }
 
   function goalCardHTML(pick) {
@@ -362,9 +431,20 @@
   }
 
   function renderRoster(team) {
-    document.getElementById('forwardsGrid').innerHTML = team.roster.F.map(function (p, i) { return slotCardHTML('F' + (i + 1), p); }).join('');
-    document.getElementById('defenseGrid').innerHTML = team.roster.D.map(function (p, i) { return slotCardHTML('D' + (i + 1), p); }).join('');
+    const breakout = team.id === MY_TEAM_ID;
+    const fMax = groupMaxFp(team.roster.F);
+    const dMax = groupMaxFp(team.roster.D);
+
+    document.getElementById('forwardsGrid').innerHTML = team.roster.F.map(function (p, i) {
+      return breakout ? breakoutSlotCardHTML('F' + (i + 1), p, fMax) : slotCardHTML('F' + (i + 1), p);
+    }).join('');
+    document.getElementById('defenseGrid').innerHTML = team.roster.D.map(function (p, i) {
+      return breakout ? breakoutSlotCardHTML('D' + (i + 1), p, dMax) : slotCardHTML('D' + (i + 1), p);
+    }).join('');
     document.getElementById('goalWrap').innerHTML = goalCardHTML(team.roster.T[0]);
+
+    document.getElementById('fLegend').innerHTML = breakout ? barLegendHTML() : '';
+    document.getElementById('dLegend').innerHTML = breakout ? barLegendHTML() : '';
 
     document.getElementById('fCount').textContent = team.roster.F.filter(Boolean).length + ' / 8 filled';
     document.getElementById('dCount').textContent = team.roster.D.filter(Boolean).length + ' / 3 filled';

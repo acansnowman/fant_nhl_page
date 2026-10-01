@@ -181,8 +181,6 @@
   .bar-track { flex-grow: 1; height: 8px; background: var(--surface-muted); border-radius: 999px; overflow: hidden; display: flex; }
   .bar-g { background: var(--accent); height: 100%; }
   .bar-a { background: var(--ink-faint); height: 100%; }
-  .bar-ga { background: var(--bad); height: 100%; }
-  .bar-so { background: var(--good); height: 100%; }
   .bar-read { font-size: 0.68rem; color: var(--ink-muted); white-space: nowrap; }
   .bar-legend { display: inline-flex; gap: 0.9rem; font-size: 0.72rem; color: var(--ink-muted); }
   .legend-item { display: inline-flex; align-items: center; gap: 0.3rem; }
@@ -191,7 +189,9 @@
   /* ---------- Team pick (goals-against slot) ---------- */
   .goal-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 9px; padding: 1.1rem 1.3rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .goal-card.breakout-goal { align-items: flex-start; }
-  .goal-card.breakout-goal .season-now { flex-grow: 1; max-width: 360px; }
+  .season-strips { display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; min-width: 260px; }
+  .season-now.season-ref { background: var(--surface-muted); }
+  .season-now.season-ref .season-now-label { color: var(--ink-muted); }
   .goal-card.open { border-left: 4px dashed var(--ink-faint); background: transparent; box-shadow: none; }
   .goal-formula { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--ink-muted); }
   .goal-stats { display: flex; gap: 1.4rem; }
@@ -459,28 +459,22 @@
       '</div>';
   }
 
-  function scoreBadgeHTML(total, title) {
-    const good = total >= 0;
-    return '<span class="trend-badge ' + (good ? 'up' : 'down') + '" title="' + title + '">' + (total >= 0 ? '+' : '') + total + '</span>';
-  }
-
-  function teamBarLegendHTML() {
+  function teamStatStripHTML(seasonLabel, stats, live) {
+    const score = -stats.ga + 10 * stats.so;
+    const gpStat = typeof stats.gp === 'number'
+      ? '<span class="season-now-stat num" title="Games played.">' + stats.gp + ' GP</span>'
+      : '';
+    const labelTitle = live
+      ? 'Live stats from the ' + seasonLabel + ' NHL season, updated nightly.'
+      : seasonLabel + ' &mdash; a completed season, used as the pre-draft reference.';
     return '' +
-      '<span class="legend-item"><span class="swatch" style="background:var(--bad)"></span>Goals against (&minus;1pt each)</span>' +
-      '<span class="legend-item"><span class="swatch" style="background:var(--good)"></span>Shutout (+10pt each)</span>';
-  }
-
-  function teamBarRowHTML(season, gaMax, soMax) {
-    const gaPct = (season.ga / gaMax * 100).toFixed(1);
-    const soPct = (season.so * 10 / soMax * 100).toFixed(1);
-    const total = -season.ga + 10 * season.so;
-    const title = season.season + ': ' + season.ga + ' GA, ' + season.so + ' shutouts (+' + (10 * season.so) + '), ' +
-      season.en + ' EN (not scored). Total ' + (total >= 0 ? '+' : '') + total + '.';
-    return '' +
-      '<div class="bar-row">' +
-        '<span class="bar-season">' + season.season + '</span>' +
-        '<div class="bar-track" title="' + title + '"><div class="bar-ga" style="width:' + gaPct + '%"></div><div class="bar-so" style="width:' + soPct + '%"></div></div>' +
-        '<span class="bar-read num" title="' + title + '">' + season.ga + ' GA &middot; +' + (10 * season.so) + ' SO &middot; ' + season.en + ' EN &middot; ' + (total >= 0 ? '+' : '') + total + '</span>' +
+      '<div class="season-now' + (live ? '' : ' season-ref') + '">' +
+        '<span class="season-now-label" title="' + labelTitle + '">' + seasonLabel + '</span>' +
+        gpStat +
+        '<span class="season-now-stat num" title="Real goals against, excluding empty-net.">' + stats.ga + ' GA</span>' +
+        '<span class="season-now-stat num" title="Shutouts.">' + stats.so + ' SO</span>' +
+        '<span class="season-now-stat num" title="Empty-net goals allowed &mdash; shown for reference, not scored.">' + stats.en + ' EN</span>' +
+        '<span class="season-now-stat season-now-pts num" title="Score: &minus;GA + 10&times;shutouts.">' + (score >= 0 ? '+' : '') + score + ' pts</span>' +
       '</div>';
   }
 
@@ -488,29 +482,16 @@
     if (!pick) return goalCardHTML(pick);
     const seasons = [pick.recent];
     if (pick.prior) seasons.push(pick.prior);
-    const gaMax = Math.max.apply(null, seasons.map(function (s) { return s.ga; })) || 1;
-    const soMax = Math.max.apply(null, seasons.map(function (s) { return s.so * 10; })) || 1;
-    const recentTotal = -pick.recent.ga + 10 * pick.recent.so;
-    const seasonsLabel = seasons.length > 1 ? 'last ' + seasons.length + ' tracked seasons' : 'last tracked season';
     return '' +
       '<div class="goal-card breakout-goal">' +
-        '<div class="breakout-top" style="width:100%;">' +
-          '<div>' +
-            '<span class="slot-label" title="' + slotLabelTitle('T1') + '">T1</span>' +
-            '<div class="player-name" style="margin-top:0.3rem;">' + pick.name + '</div>' +
-            '<div class="player-meta">' + pick.teamAbbrev + '</div>' +
-          '</div>' +
-          scoreBadgeHTML(recentTotal, 'Score in ' + pick.recent.season + ': &minus;GA + 10&times;shutouts.') +
+        '<div>' +
+          '<span class="slot-label" title="' + slotLabelTitle('T1') + '">T1</span>' +
+          '<div class="player-name" style="margin-top:0.3rem;">' + pick.name + '</div>' +
+          '<div class="player-meta">' + pick.teamAbbrev + '</div>' +
         '</div>' +
-        teamSeasonNowHTML(nowSeasonLabel, nowTotals) +
-        '<div style="width:100%;">' +
-          '<div class="breakout-top">' +
-            '<div class="bars-label" title="Each tracked season used as the pre-draft reference.">Draft reference &mdash; ' + seasonsLabel + '</div>' +
-            '<span class="bar-legend">' + teamBarLegendHTML() + '</span>' +
-          '</div>' +
-          '<div class="player-bars" style="margin-top:0.4rem;">' +
-            seasons.map(function (s) { return teamBarRowHTML(s, gaMax, soMax); }).join('') +
-          '</div>' +
+        '<div class="season-strips">' +
+          teamStatStripHTML(nowSeasonLabel, nowTotals, true) +
+          seasons.map(function (s) { return teamStatStripHTML(s.season, s, false); }).join('') +
         '</div>' +
       '</div>';
   }

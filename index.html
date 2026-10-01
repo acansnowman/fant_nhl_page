@@ -188,6 +188,8 @@
 
   /* ---------- Team pick (goals-against slot) ---------- */
   .goal-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 9px; padding: 1.1rem 1.3rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .goal-card.breakout-goal { align-items: flex-start; }
+  .goal-card.breakout-goal .season-now { flex-grow: 1; max-width: 360px; }
   .goal-card.open { border-left: 4px dashed var(--ink-faint); background: transparent; box-shadow: none; }
   .goal-formula { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--ink-muted); }
   .goal-stats { display: flex; gap: 1.4rem; }
@@ -289,6 +291,7 @@
   let TEAMS = [];
   let DRAFT_LOG = [];
   let SEASON_PLAYERS = {};
+  let SEASON_TEAMS = {};
   const CURRENT_SEASON_CODE = 20262027;
 
   function byId(id) { return TEAMS.find(function (t) { return t.id === id; }); }
@@ -306,6 +309,11 @@
   function seasonTotalsFor(playerId) {
     const rows = SEASON_PLAYERS[String(playerId)] || [];
     return rows.reduce(function (acc, r) { acc.gp++; acc.g += r.g; acc.a += r.a; return acc; }, { gp: 0, g: 0, a: 0 });
+  }
+
+  function teamSeasonTotalsFor(teamAbbrev) {
+    const rows = SEASON_TEAMS[teamAbbrev] || [];
+    return rows.reduce(function (acc, r) { acc.gp++; acc.ga += r.ga; acc.en += r.en; acc.so += r.so; return acc; }, { gp: 0, ga: 0, en: 0, so: 0 });
   }
 
   function fillCount(team) {
@@ -434,6 +442,47 @@
       '</div>';
   }
 
+  // ---------- Team pick breakout (my roster only; other managers keep goalCardHTML) ----------
+
+  function teamSeasonNowHTML(seasonLabel, totals) {
+    const score = -totals.ga + 10 * totals.so;
+    return '' +
+      '<div class="season-now">' +
+        '<span class="season-now-label" title="Live stats from the ' + seasonLabel + ' NHL season, updated nightly.">' + seasonLabel + '</span>' +
+        '<span class="season-now-stat num" title="Games played so far this season.">' + totals.gp + ' GP</span>' +
+        '<span class="season-now-stat num" title="Real goals against so far this season, excluding empty-net.">' + totals.ga + ' GA</span>' +
+        '<span class="season-now-stat num" title="Shutouts so far this season.">' + totals.so + ' SO</span>' +
+        '<span class="season-now-stat num" title="Empty-net goals allowed so far this season &mdash; shown for reference, not scored.">' + totals.en + ' EN</span>' +
+        '<span class="season-now-stat season-now-pts num" title="Team pick score so far this season: &minus;GA + 10&times;shutouts.">' + (score >= 0 ? '+' : '') + score + ' pts</span>' +
+      '</div>';
+  }
+
+  function breakoutGoalCardHTML(pick, nowSeasonLabel, nowTotals) {
+    if (!pick) return goalCardHTML(pick);
+    const total = -pick.recent.ga + 10 * pick.recent.so;
+    const enStat = typeof pick.recent.en === 'number'
+      ? '<div><dt>Empty Net</dt><dd class="num" title="Empty-net goals allowed &mdash; shown for reference, not scored.">' + pick.recent.en + '</dd></div>'
+      : '';
+    return '' +
+      '<div class="goal-card breakout-goal">' +
+        '<div>' +
+          '<span class="slot-label" title="' + slotLabelTitle('T1') + '">T1</span>' +
+          '<div class="player-name" style="margin-top:0.3rem;">' + pick.name + '</div>' +
+          '<div class="player-meta">' + pick.teamAbbrev + '</div>' +
+        '</div>' +
+        teamSeasonNowHTML(nowSeasonLabel, nowTotals) +
+        '<div>' +
+          '<div class="bars-label" title="The most recent completed NHL season, used as the pre-draft reference.">Draft reference &mdash; last tracked season</div>' +
+          '<dl class="goal-stats">' +
+            '<div><dt>Goals Against</dt><dd class="num neg" title="Real goals this NHL team allowed, excluding empty-net goals.">&minus;' + pick.recent.ga + '</dd></div>' +
+            '<div><dt>Shutouts</dt><dd class="num pos" title="10 fantasy points per shutout this team recorded.">+' + (10 * pick.recent.so) + '</dd></div>' +
+            enStat +
+            '<div><dt>Total</dt><dd class="num" title="Team pick total: &minus;GA + 10&times;shutouts.">' + (total >= 0 ? '+' : '') + total + '</dd></div>' +
+          '</dl>' +
+        '</div>' +
+      '</div>';
+  }
+
   function renderTabs() {
     const wrap = document.getElementById('teamTabs');
     wrap.innerHTML = TEAMS.map(function (t) {
@@ -484,7 +533,10 @@
       if (!breakout) return slotCardHTML('D' + (i + 1), p);
       return breakoutSlotCardHTML('D' + (i + 1), p, dMax, SEASON_LABEL, p ? seasonTotalsFor(p.playerId) : null);
     }).join('');
-    document.getElementById('goalWrap').innerHTML = goalCardHTML(team.roster.T[0]);
+    const pick = team.roster.T[0];
+    document.getElementById('goalWrap').innerHTML = breakout
+      ? breakoutGoalCardHTML(pick, SEASON_LABEL, pick ? teamSeasonTotalsFor(pick.teamAbbrev) : null)
+      : goalCardHTML(pick);
 
     document.getElementById('fLegend').innerHTML = breakout ? barLegendHTML() : '';
     document.getElementById('dLegend').innerHTML = breakout ? barLegendHTML() : '';
@@ -517,13 +569,13 @@
     renderDraftLog();
   }
 
-  function applyData(rosters, playerStats) {
+  function applyData(rosters, playerStats, teamStats) {
     TEAMS = rosters.teams;
     DRAFT_LOG = rosters.draftLog;
-    if (playerStats) {
-      SEASON_PLAYERS = playerStats.players || {};
-      SEASON_LABEL = seasonLabelFromCode(playerStats.season || CURRENT_SEASON_CODE);
-    }
+    const seasonSource = playerStats || teamStats;
+    if (playerStats) SEASON_PLAYERS = playerStats.players || {};
+    if (teamStats) SEASON_TEAMS = teamStats.teams || {};
+    if (seasonSource) SEASON_LABEL = seasonLabelFromCode(seasonSource.season || CURRENT_SEASON_CODE);
     const last = DRAFT_LOG.length ? DRAFT_LOG[DRAFT_LOG.length - 1].pick : 0;
     document.getElementById('lastUpdated').innerHTML = 'Updated after pick ' + last + ' &middot; draft running in WhatsApp';
     renderAll();
@@ -536,10 +588,11 @@
   Promise.all([
     fetchJSON('data/2026-2027/rosters.json'),
     // In-season stats don't exist yet before the first nightly run, or between seasons —
-    // that's expected, not an error, so this one fails soft.
-    fetchJSON('data/2026-2027/playerdata.json').catch(function () { return null; })
+    // that's expected, not an error, so these two fail soft.
+    fetchJSON('data/2026-2027/playerdata.json').catch(function () { return null; }),
+    fetchJSON('data/2026-2027/teamdata.json').catch(function () { return null; })
   ])
-    .then(function (results) { applyData(results[0], results[1]); })
+    .then(function (results) { applyData(results[0], results[1], results[2]); })
     .catch(function () {
       document.getElementById('lastUpdated').textContent = 'Could not load data/2026-2027/rosters.json';
     });

@@ -2,9 +2,14 @@ name: Nightly stats fetch
 
 on:
   schedule:
-    # ~04:00 America/New_York (EST, UTC-5); one hour earlier in EDT.
-    # Late enough that West Coast games (10pm ET starts) are long final.
-    - cron: '0 9 * * *'
+    # TEMPORARY one-shot test of the 2026-10-01 cron-reliability fix: fires once,
+    # 17:10 UTC (1:10pm EDT) on 2026-10-01 only (day-of-month 1, month 10), via the
+    # month/day fields rather than a daily time, so it can't linger as a stray
+    # daily trigger if reverting is forgotten. REVERT to the real schedule below
+    # once this is confirmed to have fired.
+    - cron: '10 17 1 10 *'
+    # Real nightly schedule (restore this line, remove the one above, once verified):
+    # - cron: '9 9 * * *'
   workflow_dispatch: {}
 
 permissions:

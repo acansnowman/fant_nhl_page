@@ -125,13 +125,20 @@ pick up a new draft's names automatically.
 
 ## Nightly pipeline
 
-`.github/workflows/nightly-stats.yml` runs the fetch script every night (`9 9 * * *` UTC —
-late enough that West Coast games are long finished, and deliberately off the top of the
-hour — see "Known quirks" below) and commits `data/2026-2027/
-playerdata.json`/`teamdata.json` only if something actually changed. It also supports a
-manual "Run workflow" trigger from the Actions tab, or `gh workflow run nightly-stats.yml`.
-Runs on `ubuntu-26.04` (pinned explicitly, ahead of the `ubuntu-latest` migration, so a
-future runner-image bump doesn't happen mid-season without anyone deciding it).
+`.github/workflows/nightly-stats.yml` runs the fetch script every night at two offsets
+(`9 9 * * *` and `21 9 * * *` UTC — late enough that West Coast games are long finished,
+deliberately off the top of the hour, and doubled up as a safety net — see "Known quirks"
+below) and commits `data/2026-2027/playerdata.json`/`teamdata.json` plus this README's
+timestamp line below. `fetch_stats.py` rewrites that line to the current UTC time at the
+end of every real run (not a `--prefix sample-` one), so the commit happens every night
+regardless of whether any game data actually changed — a stale timestamp here means the
+scheduled trigger never fired, not that there was nothing new to fetch (see "Known
+quirks"). It also supports a manual "Run workflow" trigger from the Actions tab, or
+`gh workflow run nightly-stats.yml`. Runs on `ubuntu-26.04` (pinned explicitly, ahead of
+the `ubuntu-latest` migration, so a future runner-image bump doesn't happen mid-season
+without anyone deciding it).
+
+**Last successful script run:** never — stamped automatically, see above.
 
 ## Testing locally
 
@@ -144,17 +151,24 @@ python3 -m http.server 8000
 
 ## Known quirks worth knowing before touching this
 
-- **A scheduled run can simply not fire, with no error anywhere.** On 2026-10-01 the
-  05:00 EDT (`09:00 UTC`) cron silently didn't run — not a failed run, no entry in the
-  Actions log at all, confirmed by diffing `asOf` across the two commits that *did*
-  exist (`git log --author=github-actions`): both came from manual `workflow_dispatch`
-  runs, none from that day's scheduled slot. GitHub's own docs flag the top of the hour
-  as the highest-risk time for a scheduled run to be delayed or dropped, since every
-  repo on GitHub scheduling at `:00` collides at once. Fixed by moving the cron to
-  `9 9 * * *` (9 minutes past). If a nightly update ever looks stale again, check
-  `git log --author=github-actions -- data/2026-2027/` for a gap before assuming the
-  fetch script itself is broken — it's just as likely the schedule never fired, and the
-  fix is `gh workflow run nightly-stats.yml` (or the Actions tab's "Run workflow").
+- **A scheduled run can simply not fire, with no error anywhere — confirmed twice in one
+  day.** On 2026-10-01 the 05:00 EDT (`09:00 UTC`) nightly cron silently didn't run: no
+  failed run, no entry in the Actions log at all, confirmed by diffing `asOf` across the
+  only two `github-actions[bot]` commits that exist (`git log --author=github-actions`) —
+  both came from manual `workflow_dispatch` runs, none from that day's scheduled slot.
+  GitHub's own docs flag the top of the hour as the highest-risk time for a scheduled run
+  to be delayed or dropped (every repo scheduling at `:00` collides at once), so the cron
+  was moved to `9 9 * * *`. As a same-day test, a one-off trigger was also scheduled for
+  17:10 UTC — deliberately not on the hour — and *that* didn't fire either (confirmed by
+  the Actions run list itself showing no new run at all, not just no new commit). Two
+  misses in one day means `schedule:` is unreliable for this repo beyond just the `:00`
+  risk, so the workflow now fires at two offsets 12 minutes apart (`9 9 * * *` and
+  `21 9 * * *`) — the commit step's "nothing to commit" skip makes a double-fire harmless,
+  so this only costs a few extra seconds of runner time most nights in exchange for one
+  firing surviving if the other is dropped. If a nightly update ever looks stale again,
+  check `git log --author=github-actions -- data/2026-2027/` for a gap in `asOf` before
+  assuming the fetch script itself is broken — the fix is `gh workflow run
+  nightly-stats.yml` (or the Actions tab's "Run workflow").
 - **NHL API is unofficial.** `api-web.nhle.com` has no SLA, no versioning guarantee, and
   its predecessor (`statsapi.web.nhle.com`) was killed without notice in 2023. Keep the
   fetch logic in one place (`scripts/fetch_stats.py`), fail loudly rather than silently,

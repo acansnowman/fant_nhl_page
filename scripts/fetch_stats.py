@@ -159,6 +159,26 @@ def load_existing(path, key):
         return json.load(f).get(key, {})
 
 
+def stamp_readme():
+    """Rewrite README's last-run line to now (UTC), so every real run leaves a
+    visible trace even when no game data changed -- proves the trigger fired."""
+    path = os.path.join(ROOT, "README.md")
+    marker = "**Last successful script run:**"
+    with open(path) as f:
+        lines = f.read().splitlines()
+    ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    stamped = marker + " " + ts + " (UTC) -- rewritten by fetch_stats.py at the " \
+        "end of every run, independent of whether any game data changed."
+    for i, line in enumerate(lines):
+        if line.startswith(marker):
+            lines[i] = stamped
+            break
+    else:
+        raise RuntimeError("README.md is missing the %r marker line" % marker)
+    with open(path, "w") as f:
+        f.write("\n".join(lines) + "\n")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--season", type=int, default=20262027)
@@ -191,6 +211,9 @@ def main():
     write_json(team_path, {"season": args.season, "asOf": as_of, "teams": teams}, old_rows_by_key="teams")
     print("season %d: %d players -> %s, %d teams -> %s, asOf %s"
           % (args.season, len(players), player_path, len(teams), team_path, as_of))
+
+    if not args.prefix:
+        stamp_readme()
 
 
 if __name__ == "__main__":

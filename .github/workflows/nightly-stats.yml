@@ -2,14 +2,23 @@ name: Nightly stats fetch
 
 on:
   schedule:
-    # TEMPORARY one-shot test of the 2026-10-01 cron-reliability fix: fires once,
-    # 17:10 UTC (1:10pm EDT) on 2026-10-01 only (day-of-month 1, month 10), via the
-    # month/day fields rather than a daily time, so it can't linger as a stray
-    # daily trigger if reverting is forgotten. REVERT to the real schedule below
-    # once this is confirmed to have fired.
-    - cron: '10 17 1 10 *'
-    # Real nightly schedule (restore this line, remove the one above, once verified):
-    # - cron: '9 9 * * *'
+    # Two offsets, 12 minutes apart, both off the top of the hour. On 2026-10-01
+    # the normal 09:00 UTC slot silently didn't fire (no run at all, not even a
+    # "nothing to commit" one), and a same-day one-off test at 17:10 UTC *also*
+    # didn't fire -- so `schedule:` looks unreliable for this repo right now,
+    # not just risky at :00. Two offsets make a single dropped firing non-fatal:
+    # whichever one survives still catches the night's games, and the commit
+    # step's own "nothing to commit" skip makes a double-fire harmless if both
+    # happen to run. See README's "Known quirks" for the full incident writeup.
+    - cron: '9 9 * * *'
+    - cron: '21 9 * * *'
+    # TEMPORARY one-shot test: 20:00 UTC (4:00pm EDT) on 2026-10-01 only (day-of-month
+    # 1, month 10), requested to confirm a run on this exact trigger today. This time
+    # the test is conclusive either way -- fetch_stats.py now stamps a timestamp into
+    # README.md on every real run, so a commit happens whether or not any game data
+    # changed. REMOVE this line once confirmed (it's a no-op after 2026-10-01 anyway,
+    # since day-of-month/month won't match again until next October).
+    - cron: '0 20 1 10 *'
   workflow_dispatch: {}
 
 permissions:
@@ -32,11 +41,11 @@ jobs:
       - name: Fetch player and team game logs
         run: python3 scripts/fetch_stats.py --out-dir data/2026-2027
 
-      - name: Commit playerdata.json / teamdata.json if either changed
+      - name: Commit updated data and the run timestamp
         run: |
-          git add data/2026-2027/playerdata.json data/2026-2027/teamdata.json
+          git add data/2026-2027/playerdata.json data/2026-2027/teamdata.json README.md
           if git diff --cached --quiet; then
-            echo "No new games; nothing to commit."
+            echo "Nothing changed (unexpected -- fetch_stats.py stamps README.md every run)."
             exit 0
           fi
           git config user.name "github-actions[bot]"

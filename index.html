@@ -170,6 +170,11 @@
   .trend-badge { font-size: 0.72rem; font-family: "IBM Plex Mono", monospace; padding: 0.08rem 0.4rem; border-radius: 999px; white-space: nowrap; }
   .trend-badge.up { background: var(--good-soft); color: var(--good); }
   .trend-badge.down { background: var(--bad-soft); color: var(--bad); }
+  .season-now { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; background: var(--accent-soft); border-radius: 7px; padding: 0.4rem 0.6rem; }
+  .season-now-label { font-family: "IBM Plex Mono", monospace; font-size: 0.66rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
+  .season-now-stat { font-size: 0.78rem; color: var(--ink); }
+  .season-now-pts { font-weight: 600; }
+  .bars-label { font-size: 0.64rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
   .player-bars { display: flex; flex-direction: column; gap: 0.35rem; }
   .bar-row { display: flex; align-items: center; gap: 0.5rem; }
   .bar-season { font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: var(--ink-faint); width: 2.7rem; flex-shrink: 0; }
@@ -219,9 +224,9 @@
       <div class="updated"><span id="lastUpdated">Updated after pick 49 &middot; draft running in WhatsApp</span> &middot; <a href="dashboard.html">Season dashboard &rarr;</a></div>
     </div>
     <div class="format-chips">
-      <span class="chip">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
-      <span class="chip">Team pick &mdash; <strong>&minus;1&times;GA (excl. EN) + 10 per shutout</strong></span>
-      <span class="chip">Roster &mdash; <strong>8 F &middot; 3 D &middot; 1 Team</strong></span>
+      <span class="chip" title="Skater scoring: 2 fantasy points per goal, 1 per assist.">Skaters &mdash; <strong>2&times;G + 1&times;A = Pts</strong></span>
+      <span class="chip" title="Team pick scoring: lose 1 point per real goal against (empty-net goals excluded), gain 10 points per shutout.">Team pick &mdash; <strong>&minus;1&times;GA (excl. EN) + 10 per shutout</strong></span>
+      <span class="chip" title="Every roster must carry exactly 8 Forwards, 3 Defense, and 1 Team pick.">Roster &mdash; <strong>8 F &middot; 3 D &middot; 1 Team</strong></span>
     </div>
   </header>
 
@@ -237,40 +242,40 @@
   <section class="summary-bar">
     <div class="summary-stat">
       <span class="summary-label">Roster Filled</span>
-      <span class="summary-value num"><span id="sumFilled">1</span><span class="of">/12</span></span>
+      <span class="summary-value num" title="How many of the 12 roster slots (8 F + 3 D + 1 Team) have a pick."><span id="sumFilled">1</span><span class="of">/12</span></span>
       <span class="summary-open" id="sumOpen">7 F &middot; 3 D &middot; 1 Team open</span>
     </div>
     <div class="summary-stat">
       <span class="summary-label">Last Season Goals</span>
-      <span class="summary-value num" id="sumGoals">44</span>
+      <span class="summary-value num" id="sumGoals" title="Combined goals across all your skaters' most recent tracked NHL season.">44</span>
     </div>
     <div class="summary-stat">
       <span class="summary-label">Last Season Assists</span>
-      <span class="summary-value num" id="sumAssists">86</span>
+      <span class="summary-value num" id="sumAssists" title="Combined assists across all your skaters' most recent tracked NHL season.">86</span>
     </div>
     <div class="summary-stat">
       <span class="summary-label">Last Season Fantasy Pts</span>
-      <span class="summary-value num" id="sumPoints">174</span>
+      <span class="summary-value num" id="sumPoints" title="Combined fantasy points (2&times;G + 1&times;A) across all your skaters' most recent tracked season.">174</span>
     </div>
     <div class="summary-stat">
       <span class="summary-label">Team Pick Pts</span>
-      <span class="summary-value num" id="sumGoalPts">&mdash;</span>
+      <span class="summary-value num" id="sumGoalPts" title="Your Team pick's score: &minus;1&times;GA (excl. EN) + 10 per shutout, most recent tracked season.">&mdash;</span>
       <span class="summary-open" id="sumGoalNote">no team picked yet</span>
     </div>
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Forwards</h2><span class="section-head-right"><span class="fill-count num" id="fCount">1 / 8 filled</span><span class="bar-legend" id="fLegend"></span></span></div>
+    <div class="section-head"><h2>Forwards</h2><span class="section-head-right"><span class="fill-count num" id="fCount" title="Forward slots filled out of 8.">1 / 8 filled</span><span class="bar-legend" id="fLegend"></span></span></div>
     <div class="slot-grid forwards" id="forwardsGrid"></div>
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Defense</h2><span class="section-head-right"><span class="fill-count num" id="dCount">0 / 3 filled</span><span class="bar-legend" id="dLegend"></span></span></div>
+    <div class="section-head"><h2>Defense</h2><span class="section-head-right"><span class="fill-count num" id="dCount" title="Defense slots filled out of 3.">0 / 3 filled</span><span class="bar-legend" id="dLegend"></span></span></div>
     <div class="slot-grid defense" id="defenseGrid"></div>
   </section>
 
   <section class="roster-section">
-    <div class="section-head"><h2>Team Pick</h2><span class="fill-count num" id="tCount">0 / 1 filled</span></div>
+    <div class="section-head"><h2>Team Pick</h2><span class="fill-count num" id="tCount" title="Team pick slot filled out of 1.">0 / 1 filled</span></div>
     <div id="goalWrap"></div>
   </section>
 
@@ -283,30 +288,51 @@
 <script>
   let TEAMS = [];
   let DRAFT_LOG = [];
+  let SEASON_PLAYERS = {};
+  const CURRENT_SEASON_CODE = 20262027;
 
   function byId(id) { return TEAMS.find(function (t) { return t.id === id; }); }
   function fp(g, a) { return 2 * g + a; }
   const MY_TEAM_ID = 'you';
   let activeTeam = MY_TEAM_ID;
 
+  function seasonLabelFromCode(code) {
+    const start = String(Math.floor(code / 10000)).slice(-2);
+    const end = String(code % 10000).slice(-2);
+    return "'" + start + '-' + end;
+  }
+  let SEASON_LABEL = seasonLabelFromCode(CURRENT_SEASON_CODE);
+
+  function seasonTotalsFor(playerId) {
+    const rows = SEASON_PLAYERS[String(playerId)] || [];
+    return rows.reduce(function (acc, r) { acc.gp++; acc.g += r.g; acc.a += r.a; return acc; }, { gp: 0, g: 0, a: 0 });
+  }
+
   function fillCount(team) {
     return [...team.roster.F, ...team.roster.D, ...team.roster.T].filter(Boolean).length;
+  }
+
+  function slotLabelTitle(label) {
+    if (label === 'T1') return 'Team pick slot';
+    return (label[0] === 'F' ? 'Forward' : 'Defense') + ' slot ' + label.slice(1);
   }
 
   function slotCardHTML(label, player) {
     if (!player) {
       return '<article class="slot-card open"><span class="slot-label">' + label + '</span><span class="open-tag">Open</span></article>';
     }
+    const recentFp = fp(player.recent.g, player.recent.a);
+    const priorFp = fp(player.prior.g, player.prior.a);
     return '' +
       '<article class="slot-card">' +
-        '<span class="slot-label">' + label + '</span>' +
+        '<span class="slot-label" title="' + slotLabelTitle(label) + '">' + label + '</span>' +
         '<div>' +
           '<div class="player-name">' + player.name + '</div>' +
           '<div class="player-meta">' + player.teamAbbrev + ' &middot; ' + player.pos + ' &middot; Age ' + player.age + '</div>' +
         '</div>' +
         '<dl class="player-stats">' +
-          '<div><dt>' + player.recent.season + '</dt><dd class="num">' + fp(player.recent.g, player.recent.a) + ' pts</dd></div>' +
-          '<div><dt>' + player.prior.season + '</dt><dd class="num">' + fp(player.prior.g, player.prior.a) + ' pts</dd></div>' +
+          '<div><dt>' + player.recent.season + '</dt><dd class="num" title="' + player.recent.g + ' goals, ' + player.recent.a + ' assists (2&times;G + 1&times;A).">' + recentFp + ' pts</dd></div>' +
+          '<div><dt>' + player.prior.season + '</dt><dd class="num" title="' + player.prior.g + ' goals, ' + player.prior.a + ' assists (2&times;G + 1&times;A).">' + priorFp + ' pts</dd></div>' +
         '</dl>' +
       '</article>';
   }
@@ -321,34 +347,49 @@
   function barRowHTML(seasonLabel, g, a, groupMax) {
     const gPct = (g * 2 / groupMax * 100).toFixed(1);
     const aPct = (a / groupMax * 100).toFixed(1);
+    const title = seasonLabel + ': ' + g + ' goals, ' + a + ' assists, ' + fp(g, a) + ' fantasy points (2&times;G + 1&times;A).';
     return '' +
       '<div class="bar-row">' +
         '<span class="bar-season">' + seasonLabel + '</span>' +
-        '<div class="bar-track"><div class="bar-g" style="width:' + gPct + '%"></div><div class="bar-a" style="width:' + aPct + '%"></div></div>' +
-        '<span class="bar-read num">' + g + 'G ' + a + 'A &middot; ' + fp(g, a) + '</span>' +
+        '<div class="bar-track" title="' + title + '"><div class="bar-g" style="width:' + gPct + '%"></div><div class="bar-a" style="width:' + aPct + '%"></div></div>' +
+        '<span class="bar-read num" title="' + title + '">' + g + 'G ' + a + 'A &middot; ' + fp(g, a) + '</span>' +
       '</div>';
   }
 
-  function trendBadgeHTML(recentFp, priorFp) {
+  function trendBadgeHTML(recentFp, priorFp, recentLabel, priorLabel) {
     const delta = recentFp - priorFp;
     const up = delta >= 0;
-    return '<span class="trend-badge ' + (up ? 'up' : 'down') + '">' + (up ? '&#9650;' : '&#9660;') + ' ' + (up ? '+' : '') + delta + '</span>';
+    const title = 'Fantasy points: ' + priorLabel + ' ' + priorFp + ' &rarr; ' + recentLabel + ' ' + recentFp + '.';
+    return '<span class="trend-badge ' + (up ? 'up' : 'down') + '" title="' + title + '">' + (up ? '&#9650;' : '&#9660;') + ' ' + (up ? '+' : '') + delta + '</span>';
   }
 
-  function breakoutSlotCardHTML(label, player, groupMax) {
+  function seasonNowHTML(seasonLabel, totals) {
+    const pts = fp(totals.g, totals.a);
+    return '' +
+      '<div class="season-now">' +
+        '<span class="season-now-label" title="Live stats from the ' + seasonLabel + ' NHL season, updated nightly.">' + seasonLabel + '</span>' +
+        '<span class="season-now-stat num" title="Games played so far this season.">' + totals.gp + ' GP</span>' +
+        '<span class="season-now-stat num" title="Goals and assists so far this season.">' + totals.g + 'G ' + totals.a + 'A</span>' +
+        '<span class="season-now-stat season-now-pts num" title="Fantasy points so far this season (2&times;G + 1&times;A).">' + pts + ' pts</span>' +
+      '</div>';
+  }
+
+  function breakoutSlotCardHTML(label, player, groupMax, nowSeasonLabel, nowTotals) {
     if (!player) {
       return '<article class="slot-card open"><span class="slot-label">' + label + '</span><span class="open-tag">Open</span></article>';
     }
     return '' +
       '<article class="slot-card">' +
         '<div class="breakout-top">' +
-          '<span class="slot-label">' + label + '</span>' +
-          trendBadgeHTML(fp(player.recent.g, player.recent.a), fp(player.prior.g, player.prior.a)) +
+          '<span class="slot-label" title="' + slotLabelTitle(label) + '">' + label + '</span>' +
+          trendBadgeHTML(fp(player.recent.g, player.recent.a), fp(player.prior.g, player.prior.a), player.recent.season, player.prior.season) +
         '</div>' +
         '<div>' +
           '<div class="player-name">' + player.name + '</div>' +
           '<div class="player-meta">' + player.teamAbbrev + ' &middot; ' + player.pos + ' &middot; Age ' + player.age + '</div>' +
         '</div>' +
+        seasonNowHTML(nowSeasonLabel, nowTotals) +
+        '<div class="bars-label" title="Each player\'s two most recent completed NHL seasons, used as the pre-draft reference.">Draft reference &mdash; last 2 tracked seasons</div>' +
         '<div class="player-bars">' +
           barRowHTML(player.recent.season, player.recent.g, player.recent.a, groupMax) +
           barRowHTML(player.prior.season, player.prior.g, player.prior.a, groupMax) +
@@ -375,20 +416,20 @@
     }
     const total = -pick.recent.ga + 10 * pick.recent.so;
     const enStat = typeof pick.recent.en === 'number'
-      ? '<div><dt>Empty Net</dt><dd class="num">' + pick.recent.en + '</dd></div>'
+      ? '<div><dt>Empty Net</dt><dd class="num" title="Empty-net goals allowed &mdash; shown for reference, not scored.">' + pick.recent.en + '</dd></div>'
       : '';
     return '' +
       '<div class="goal-card">' +
         '<div>' +
-          '<span class="slot-label">T1</span>' +
+          '<span class="slot-label" title="' + slotLabelTitle('T1') + '">T1</span>' +
           '<div class="player-name" style="margin-top:0.3rem;">' + pick.name + '</div>' +
           '<div class="player-meta">' + pick.teamAbbrev + '</div>' +
         '</div>' +
         '<dl class="goal-stats">' +
-          '<div><dt>Goals Against</dt><dd class="num neg">&minus;' + pick.recent.ga + '</dd></div>' +
-          '<div><dt>Shutouts</dt><dd class="num pos">+' + (10 * pick.recent.so) + '</dd></div>' +
+          '<div><dt>Goals Against</dt><dd class="num neg" title="Real goals this NHL team allowed, excluding empty-net goals.">&minus;' + pick.recent.ga + '</dd></div>' +
+          '<div><dt>Shutouts</dt><dd class="num pos" title="10 fantasy points per shutout this team recorded.">+' + (10 * pick.recent.so) + '</dd></div>' +
           enStat +
-          '<div><dt>Total</dt><dd class="num">' + (total >= 0 ? '+' : '') + total + '</dd></div>' +
+          '<div><dt>Total</dt><dd class="num" title="Team pick total: &minus;GA + 10&times;shutouts.">' + (total >= 0 ? '+' : '') + total + '</dd></div>' +
         '</dl>' +
       '</div>';
   }
@@ -398,7 +439,7 @@
     wrap.innerHTML = TEAMS.map(function (t) {
       const active = t.id === activeTeam;
       return '<button class="team-tab' + (active ? ' active' : '') + '" data-team="' + t.id + '" aria-pressed="' + active + '">' +
-        t.name + ' <span class="fill-badge num">' + fillCount(t) + '/12</span></button>';
+        t.name + ' <span class="fill-badge num" title="' + fillCount(t) + ' of 12 roster slots filled.">' + fillCount(t) + '/12</span></button>';
     }).join('');
     wrap.querySelectorAll('.team-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -436,10 +477,12 @@
     const dMax = groupMaxFp(team.roster.D);
 
     document.getElementById('forwardsGrid').innerHTML = team.roster.F.map(function (p, i) {
-      return breakout ? breakoutSlotCardHTML('F' + (i + 1), p, fMax) : slotCardHTML('F' + (i + 1), p);
+      if (!breakout) return slotCardHTML('F' + (i + 1), p);
+      return breakoutSlotCardHTML('F' + (i + 1), p, fMax, SEASON_LABEL, p ? seasonTotalsFor(p.playerId) : null);
     }).join('');
     document.getElementById('defenseGrid').innerHTML = team.roster.D.map(function (p, i) {
-      return breakout ? breakoutSlotCardHTML('D' + (i + 1), p, dMax) : slotCardHTML('D' + (i + 1), p);
+      if (!breakout) return slotCardHTML('D' + (i + 1), p);
+      return breakoutSlotCardHTML('D' + (i + 1), p, dMax, SEASON_LABEL, p ? seasonTotalsFor(p.playerId) : null);
     }).join('');
     document.getElementById('goalWrap').innerHTML = goalCardHTML(team.roster.T[0]);
 
@@ -474,17 +517,29 @@
     renderDraftLog();
   }
 
-  function applyData(data) {
-    TEAMS = data.teams;
-    DRAFT_LOG = data.draftLog;
+  function applyData(rosters, playerStats) {
+    TEAMS = rosters.teams;
+    DRAFT_LOG = rosters.draftLog;
+    if (playerStats) {
+      SEASON_PLAYERS = playerStats.players || {};
+      SEASON_LABEL = seasonLabelFromCode(playerStats.season || CURRENT_SEASON_CODE);
+    }
     const last = DRAFT_LOG.length ? DRAFT_LOG[DRAFT_LOG.length - 1].pick : 0;
     document.getElementById('lastUpdated').innerHTML = 'Updated after pick ' + last + ' &middot; draft running in WhatsApp';
     renderAll();
   }
 
-  fetch('data/2026-2027/rosters.json', { cache: 'no-cache' })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(applyData)
+  function fetchJSON(path) {
+    return fetch(path, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+
+  Promise.all([
+    fetchJSON('data/2026-2027/rosters.json'),
+    // In-season stats don't exist yet before the first nightly run, or between seasons —
+    // that's expected, not an error, so this one fails soft.
+    fetchJSON('data/2026-2027/playerdata.json').catch(function () { return null; })
+  ])
+    .then(function (results) { applyData(results[0], results[1]); })
     .catch(function () {
       document.getElementById('lastUpdated').textContent = 'Could not load data/2026-2027/rosters.json';
     });

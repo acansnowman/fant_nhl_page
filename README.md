@@ -138,7 +138,7 @@ quirks"). It also supports a manual "Run workflow" trigger from the Actions tab,
 the `ubuntu-latest` migration, so a future runner-image bump doesn't happen mid-season
 without anyone deciding it).
 
-**Last successful script run:** 2026-10-04T13:55:59Z (UTC) -- rewritten by fetch_stats.py at the end of every run, independent of whether any game data changed.
+**Last successful script run:** 2026-10-04T14:45:23Z (UTC) -- rewritten by fetch_stats.py at the end of every run, independent of whether any game data changed.
 
 ## Testing locally
 
